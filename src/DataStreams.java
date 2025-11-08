@@ -112,4 +112,53 @@ public class DataStreams
         fileSearchPnl.add(regExLbl, gbc3);
         fileSearchPnl.add(regExTF, gbc4);
     }
+
+    private void createFileDisplayPnl()
+    {
+        fileDisplayPnl = new JPanel();
+        fileDisplayPnl.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc1 = new GridBagConstraints();
+        gbc1.gridx = 0;
+        gbc1.gridy = 0;
+        gbc1.gridwidth = 1;
+        gbc1.gridheight = 1;
+        gbc1.fill = GridBagConstraints.NONE;
+        gbc1.anchor = GridBagConstraints.SOUTH;
+        gbc1.insets = new Insets(15, 15, 15, 15);
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.gridx = 0;
+        gbc2.gridy = 1;
+        gbc2.gridwidth = 1;
+        gbc2.gridheight = 3;
+        gbc2.fill = GridBagConstraints.BOTH;
+        GridBagConstraints gbc3 = new GridBagConstraints();
+        gbc3.gridx = 1;
+        gbc3.gridy = 0;
+        gbc3.gridwidth = 1;
+        gbc3.gridheight = 1;
+        gbc3.fill = GridBagConstraints.NONE;
+        gbc3.anchor = GridBagConstraints.SOUTH;
+        gbc3.insets = new Insets(15, 15, 15, 15);
+        GridBagConstraints gbc4 = new GridBagConstraints();
+        gbc4.gridx = 1;
+        gbc4.gridy = 1;
+        gbc4.gridwidth = 1;
+        gbc4.gridheight = 3;
+        gbc4.fill = GridBagConstraints.BOTH;
+
+        originalFileLbl = new JLabel("Original File:");
+        filteredFileLbl = new JLabel("Filtered File:");
+        originalFileTA = new JTextArea(10, 50);
+        filteredFileTA = new JTextArea(10, 50);
+        originalFileTA.setEditable(false);
+        filteredFileTA.setEditable(false);
+        scroller1 = new JScrollPane(originalFileTA);
+        scroller2 = new JScrollPane(filteredFileTA);
+
+        fileDisplayPnl.add(originalFileLbl, gbc1);
+        fileDisplayPnl.add(scroller1, gbc2);
+        fileDisplayPnl.add(filteredFileLbl, gbc3);
+        fileDisplayPnl.add(scroller2, gbc4);
+    }
 }

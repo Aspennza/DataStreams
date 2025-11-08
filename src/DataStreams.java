@@ -10,30 +10,37 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.stream.Stream;
 
+// To do:
+// Write the selectFile method
+// Set up the actionlisteners
+// junit
+// javadoc
+// uml
+
 public class DataStreams
 {
-    static JPanel mainPnl;
-    static JPanel titlePnl;
-    static JLabel titleLbl;
-    static Font titleFont;
-    static JPanel fileSearchPnl;
-    static JLabel fileNameLbl;
-    static JTextField fileNameTF;
-    static JLabel regExLbl;
-    static JTextField regExTF;
-    static JPanel fileDisplayPnl;
-    static JLabel originalFileLbl;
-    static JLabel filteredFileLbl;
-    static JTextArea originalFileTA;
-    static JTextArea filteredFileTA;
-    static JScrollPane scroller1;
-    static JScrollPane scroller2;
-    static JPanel controlPnl;
-    static JButton fileSelectBtn;
-    static JButton searchFileBtn;
-    static JButton quitBtn;
-    static JFileChooser chooser;
-    static File selectedFile;
+    JPanel mainPnl;
+    JPanel titlePnl;
+    JLabel titleLbl;
+    Font titleFont;
+    JPanel fileSearchPnl;
+    JLabel fileNameLbl;
+    JTextField fileNameTF;
+    JLabel regExLbl;
+    JTextField regExTF;
+    JPanel fileDisplayPnl;
+    JLabel originalFileLbl;
+    JLabel filteredFileLbl;
+    JTextArea originalFileTA;
+    JTextArea filteredFileTA;
+    JScrollPane scroller1;
+    JScrollPane scroller2;
+    JPanel controlPnl;
+    JButton fileSelectBtn;
+    JButton searchFileBtn;
+    JButton quitBtn;
+    JFileChooser chooser;
+    File selectedFile;
 
     //Main can only launch the program, not actually hold the code!!!
     public static void main(String[] args)
@@ -254,7 +261,7 @@ public class DataStreams
 
         quitBtn.addActionListener((ActionEvent ae) -> {
             //This int tracks whether the user confirmed or denied they wanted to quit the program
-            int selection = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit? You can press Re-run Program to reset the program.", "Quit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int selection = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Quit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
             //This algorithm determines whether to quit the program based on the user's input
             if(selection == JOptionPane.YES_OPTION) {

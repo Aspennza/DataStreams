@@ -3,11 +3,14 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 // To do:
@@ -41,6 +44,7 @@ public class DataStreams
     JButton quitBtn;
     JFileChooser chooser;
     File selectedFile;
+    List<String> originalStreamResult;
 
     //Main can only launch the program, not actually hold the code!!!
     public static void main(String[] args)
@@ -49,22 +53,45 @@ public class DataStreams
         data.generateFrame();
     }
 
+    public DataStreams()
+    {
+        chooser = new JFileChooser();
+    }
+
     private void selectFile()
     {
-//        try (Stream lines = Files.lines(user selects file path))
-//        {
-//
-//        }
-//        catch(FileNotFoundException e)
-//        {
-//            //joptionpane dialog
-//            e.printStackTrace();
-//        }
-//        catch(IOException e)
-//        {
-//            //joptionpane dialog
-//            e.printStackTrace();
-//        }
+        File workingDirectory = new File(System.getProperty("user.dir"));
+        chooser.setCurrentDirectory(workingDirectory);
+
+        if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+        {
+            selectedFile = chooser.getSelectedFile();
+            Path file = selectedFile.toPath();
+            String pathString = file.toString();
+
+            try (Stream<String> lines = Files.lines(Paths.get(pathString)))
+            {
+                originalStreamResult = lines.toList();
+                for(String line : originalStreamResult) {
+                    originalFileTA.append(line + "\n");
+                }
+            }
+            catch(FileNotFoundException e)
+            {
+                //joptionpane dialog
+                e.printStackTrace();
+            }
+            catch(IOException e)
+            {
+                //joptionpane dialog
+                e.printStackTrace();
+            }
+        } else
+        {
+            System.out.println("No file was selected.");
+            System.out.println("Please run this program again to select a file.");
+            System.exit(0);
+        }
     }
 
     private void generateFrame()
@@ -221,8 +248,8 @@ public class DataStreams
 
         originalFileLbl = new JLabel("Original File:");
         filteredFileLbl = new JLabel("Filtered File:");
-        originalFileTA = new JTextArea(10, 50);
-        filteredFileTA = new JTextArea(10, 50);
+        originalFileTA = new JTextArea(15, 50);
+        filteredFileTA = new JTextArea(15, 50);
         originalFileTA.setEditable(false);
         filteredFileTA.setEditable(false);
         scroller1 = new JScrollPane(originalFileTA);
@@ -248,12 +275,15 @@ public class DataStreams
 
         fileSelectBtn.addActionListener((ActionEvent ae) ->
         {
-
+            selectFile();
+            searchFileBtn.setEnabled(true);
         });
 
         controlPnl.add(searchFileBtn);
+        searchFileBtn.setEnabled(false);
 
-        searchFileBtn.addActionListener((ActionEvent ae) -> {
+        searchFileBtn.addActionListener((ActionEvent ae) ->
+        {
 
         });
 
@@ -272,5 +302,89 @@ public class DataStreams
                 JOptionPane.showMessageDialog(null, "The program will remain open.");
             }
         });
+    }
+
+    public JPanel getMainPnl() {
+        return mainPnl;
+    }
+
+    public JPanel getTitlePnl() {
+        return titlePnl;
+    }
+
+    public JLabel getTitleLbl() {
+        return titleLbl;
+    }
+
+    public Font getTitleFont() {
+        return titleFont;
+    }
+
+    public JPanel getFileSearchPnl() {
+        return fileSearchPnl;
+    }
+
+    public JLabel getFileNameLbl() {
+        return fileNameLbl;
+    }
+
+    public JTextField getFileNameTF() {
+        return fileNameTF;
+    }
+
+    public JLabel getRegExLbl() {
+        return regExLbl;
+    }
+
+    public JTextField getRegExTF() {
+        return regExTF;
+    }
+
+    public JPanel getFileDisplayPnl() {
+        return fileDisplayPnl;
+    }
+
+    public JLabel getOriginalFileLbl() {
+        return originalFileLbl;
+    }
+
+    public JLabel getFilteredFileLbl() {
+        return filteredFileLbl;
+    }
+
+    public JTextArea getOriginalFileTA() {
+        return originalFileTA;
+    }
+
+    public JTextArea getFilteredFileTA() {
+        return filteredFileTA;
+    }
+
+    public JScrollPane getScroller1() {
+        return scroller1;
+    }
+
+    public JScrollPane getScroller2() {
+        return scroller2;
+    }
+
+    public JPanel getControlPnl() {
+        return controlPnl;
+    }
+
+    public JButton getFileSelectBtn() {
+        return fileSelectBtn;
+    }
+
+    public JButton getSearchFileBtn() {
+        return searchFileBtn;
+    }
+
+    public JButton getQuitBtn() {
+        return quitBtn;
+    }
+
+    public JFileChooser getChooser() {
+        return chooser;
     }
 }

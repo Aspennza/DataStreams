@@ -3,19 +3,18 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.util.LinkedList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // To do:
-// Write the selectFile method
-// Set up the actionlisteners
 // junit
 // javadoc
 // uml
@@ -29,8 +28,8 @@ public class DataStreams
     JPanel fileSearchPnl;
     JLabel fileNameLbl;
     JTextField fileNameTF;
-    JLabel regExLbl;
-    JTextField regExTF;
+    JLabel searchStringLbl;
+    JTextField searchStringTF;
     JPanel fileDisplayPnl;
     JLabel originalFileLbl;
     JLabel filteredFileLbl;
@@ -45,8 +44,8 @@ public class DataStreams
     JFileChooser chooser;
     File selectedFile;
     List<String> originalStreamResult;
+    boolean hasSelectedFile = false;
 
-    //Main can only launch the program, not actually hold the code!!!
     public static void main(String[] args)
     {
         DataStreams data = new DataStreams();
@@ -69,29 +68,50 @@ public class DataStreams
             Path file = selectedFile.toPath();
             String pathString = file.toString();
 
+            fileNameTF.setText(selectedFile.getName());
+            hasSelectedFile = true;
+            searchFileBtn.setEnabled(true);
+            originalFileTA.setText("");
+            filteredFileTA.setText("");
+
             try (Stream<String> lines = Files.lines(Paths.get(pathString)))
             {
-                originalStreamResult = lines.toList();
+                originalStreamResult = lines
+                        .collect(Collectors.toList());
                 for(String line : originalStreamResult) {
                     originalFileTA.append(line + "\n");
                 }
-            }
-            catch(FileNotFoundException e)
-            {
-                //joptionpane dialog
-                e.printStackTrace();
+
+                JOptionPane.showMessageDialog(null, "Now, you can filter your file for specific words using the Search String textbox and Search File button.");
             }
             catch(IOException e)
             {
-                //joptionpane dialog
+                JOptionPane.showMessageDialog(null, "An error occurred.");
                 e.printStackTrace();
             }
         } else
         {
-            System.out.println("No file was selected.");
-            System.out.println("Please run this program again to select a file.");
-            System.exit(0);
+            JOptionPane.showMessageDialog(null, "No file was selected.");
         }
+    }
+
+    private void filterFile()
+    {
+        String searchString = searchStringTF.getText().toLowerCase();
+        List<String> filteredStreamResult = new LinkedList<>();
+        int lineNum = 1;
+        filteredFileTA.setText("");
+
+            filteredStreamResult = originalStreamResult.stream()
+                    .map(String::trim)
+                    .filter(s -> s.toLowerCase().contains(searchString))
+                    .collect(Collectors.toList());
+
+            for (String line : filteredStreamResult)
+            {
+                filteredFileTA.append(lineNum + ")       " + line + "\n");
+                lineNum++;
+            }
     }
 
     private void generateFrame()
@@ -152,6 +172,21 @@ public class DataStreams
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Data Streams");
         frame.setVisible(true);
+        JOptionPane.showMessageDialog(null, "Welcome to the Data Stream Filter! First, select a file using the Load File button.");
+    }
+
+    private void clearProgram()
+    {
+        selectedFile = null;
+
+        if(originalStreamResult != null) {
+            originalStreamResult.clear();
+        }
+        fileNameTF.setText("");
+        searchStringTF.setText("");
+        originalFileTA.setText("");
+        filteredFileTA.setText("");
+        searchFileBtn.setEnabled(false);
     }
 
     private void createTitlePnl()
@@ -202,13 +237,13 @@ public class DataStreams
         fileNameLbl = new JLabel("File Name:");
         fileNameTF = new JTextField(30);
         fileNameTF.setEditable(false);
-        regExLbl = new JLabel("Search String:");
-        regExTF = new JTextField(30);
+        searchStringLbl = new JLabel("Search String:");
+        searchStringTF = new JTextField(30);
 
         fileSearchPnl.add(fileNameLbl, gbc1);
         fileSearchPnl.add(fileNameTF, gbc2);
-        fileSearchPnl.add(regExLbl, gbc3);
-        fileSearchPnl.add(regExTF, gbc4);
+        fileSearchPnl.add(searchStringLbl, gbc3);
+        fileSearchPnl.add(searchStringTF, gbc4);
     }
 
     private void createFileDisplayPnl()
@@ -275,8 +310,21 @@ public class DataStreams
 
         fileSelectBtn.addActionListener((ActionEvent ae) ->
         {
-            selectFile();
-            searchFileBtn.setEnabled(true);
+            if(hasSelectedFile) {
+                //This int tracks whether the user confirmed or denied they wanted to quit the program
+                int selection = JOptionPane.showConfirmDialog(null, "Are you sure you want to load a new file?", "Load a File", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                //This algorithm determines whether to quit the program based on the user's input
+                if(selection == JOptionPane.YES_OPTION) {
+                    clearProgram();
+                    selectFile();
+                } else
+                {
+                    JOptionPane.showMessageDialog(null, "Your existing file will remain open.");
+                }
+            } else {
+                selectFile();
+            }
         });
 
         controlPnl.add(searchFileBtn);
@@ -284,6 +332,13 @@ public class DataStreams
 
         searchFileBtn.addActionListener((ActionEvent ae) ->
         {
+            if(!searchStringTF.getText().trim().isEmpty())
+            {
+                filterFile();
+            } else
+            {
+                JOptionPane.showMessageDialog(null, "You must enter a search string in the Search String text box before filtering.");
+            }
 
         });
 
@@ -332,12 +387,12 @@ public class DataStreams
         return fileNameTF;
     }
 
-    public JLabel getRegExLbl() {
-        return regExLbl;
+    public JLabel getSearchStringLbl() {
+        return searchStringLbl;
     }
 
-    public JTextField getRegExTF() {
-        return regExTF;
+    public JTextField getSearchStringTF() {
+        return searchStringTF;
     }
 
     public JPanel getFileDisplayPnl() {

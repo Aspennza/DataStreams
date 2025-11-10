@@ -14,9 +14,6 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-// To do:
-// uml
-
 /**
  * Allows the creation of objects for reading and filtering files using Streams.
  * Contains a GUI, methods for reading and filtering files, and a method for

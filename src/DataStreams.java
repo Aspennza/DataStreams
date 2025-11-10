@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // To do:
-// junit
 // javadoc
 // uml
 
@@ -57,7 +56,7 @@ public class DataStreams
         chooser = new JFileChooser();
     }
 
-    private void selectFile()
+    public void selectFile()
     {
         File workingDirectory = new File(System.getProperty("user.dir"));
         chooser.setCurrentDirectory(workingDirectory);
@@ -99,19 +98,24 @@ public class DataStreams
     {
         String searchString = searchStringTF.getText().toLowerCase();
         List<String> filteredStreamResult = new LinkedList<>();
+
+        filteredStreamResult = filterLines(originalStreamResult, searchString);
+
         int lineNum = 1;
         filteredFileTA.setText("");
-
-            filteredStreamResult = originalStreamResult.stream()
-                    .map(String::trim)
-                    .filter(s -> s.toLowerCase().contains(searchString))
-                    .collect(Collectors.toList());
-
             for (String line : filteredStreamResult)
             {
                 filteredFileTA.append(lineNum + ")       " + line + "\n");
                 lineNum++;
             }
+    }
+
+    public List<String> filterLines(List<String> lines, String searchString)
+    {
+        return lines.stream()
+                .map(String::trim)
+                .filter(s -> s.toLowerCase().contains(searchString))
+                .collect(Collectors.toList());
     }
 
     private void generateFrame()
@@ -175,7 +179,7 @@ public class DataStreams
         JOptionPane.showMessageDialog(null, "Welcome to the Data Stream Filter! First, select a file using the Load File button.");
     }
 
-    private void clearProgram()
+    public void clearProgram()
     {
         selectedFile = null;
 
@@ -441,5 +445,45 @@ public class DataStreams
 
     public JFileChooser getChooser() {
         return chooser;
+    }
+
+    public boolean hasSelectedFile() {
+        return hasSelectedFile;
+    }
+
+    public List<String> getOriginalStreamResult() {
+        return originalStreamResult;
+    }
+
+    public File getSelectedFile() {
+        return selectedFile;
+    }
+
+    public void setSearchStringTF(JTextField searchStringTF) {
+        this.searchStringTF = searchStringTF;
+    }
+
+    public void setOriginalStreamResult(List<String> originalStreamResult) {
+        this.originalStreamResult = originalStreamResult;
+    }
+
+    public void setFilteredFileTA(JTextArea filteredFileTA) {
+        this.filteredFileTA = filteredFileTA;
+    }
+
+    public void setSelectedFile(File selectedFile) {
+        this.selectedFile = selectedFile;
+    }
+
+    public void setFileNameTF(JTextField fileNameTF) {
+        this.fileNameTF = fileNameTF;
+    }
+
+    public void setOriginalFileTA(JTextArea originalFileTA) {
+        this.originalFileTA = originalFileTA;
+    }
+
+    public void setSearchFileBtn(JButton searchFileBtn) {
+        this.searchFileBtn = searchFileBtn;
     }
 }
